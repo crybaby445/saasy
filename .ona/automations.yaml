@@ -1,0 +1,7 @@
+tasks:
+  install-claude-cli:
+    name: Install Claude CLI
+    description: Install Claude CLI globally via npm.
+    command: npm install -g @anthropic-ai/claude-code
+    triggeredBy:
+      - postDevcontainerStart

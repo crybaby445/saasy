@@ -1,0 +1,7 @@
+{
+	"name": "Claude Code Development",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {}
+	}
+}

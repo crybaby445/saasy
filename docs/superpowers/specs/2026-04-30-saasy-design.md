@@ -1,4 +1,4 @@
-# saasy — AI-Powered SaaS Red Team Assistant
+# SaaSy — AI-Powered SaaS Red Team Assistant
 
 **Date:** 2026-04-30  
 **Status:** Approved
@@ -7,9 +7,9 @@
 
 ## Overview
 
-saasy is an AI-powered red team assistant for evaluating SaaS applications. It authenticates to a target SaaS instance using real credentials, performs enumeration via live API calls, and uses Claude (AI) to reason about the results from an attacker's mindset — surfacing potential attack paths and discussing them conversationally with the tester.
+SaaSy is an AI-powered red team assistant for evaluating SaaS applications. It authenticates to a target SaaS instance using real credentials, performs enumeration via live API calls, and uses Claude (AI) to reason about the results from an attacker's mindset — surfacing potential attack paths and discussing them conversationally with the tester.
 
-This is not a compliance checker. It is a proactive attack path development tool designed for security engineers and principal pentesters.
+This is not a compliance checker. It is a proactive attack path development tool designed for red teamers and security engineers.
 
 ---
 
