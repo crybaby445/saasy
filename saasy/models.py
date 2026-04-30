@@ -30,7 +30,7 @@ class EnumResult:
 class Finding:
     title: str
     description: str
-    evidence: Optional["EnumResult"]
+    evidence: Optional[EnumResult]
 
 @dataclass
 class Session:
@@ -39,6 +39,6 @@ class Session:
     connector_description: str = ""
     auth_headers: dict = field(default_factory=dict)
     auth_type: str = "API Key"
-    enum_results: list = field(default_factory=list)   # list[EnumResult]
-    findings: list = field(default_factory=list)        # list[Finding]
-    conversation: list = field(default_factory=list)    # list[dict]
+    enum_results: list[EnumResult] = field(default_factory=list)
+    findings: list[Finding] = field(default_factory=list)
+    conversation: list[dict] = field(default_factory=list)
