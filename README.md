@@ -1,4 +1,4 @@
-# saasy
+# SaaSy
 
 An AI-powered SaaS red team assistant. Authenticate to a SaaS target, enumerate its attack surface through live API calls, and work with Claude to develop attack paths — conversationally, from an attacker's mindset.
 
@@ -20,15 +20,29 @@ The loop runs until you quit. Every request and response is captured in the sess
 ## Installation
 
 ```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 git clone https://github.com/crybaby445/saasy
 cd saasy
-pip install -e .
+uv venv
+uv pip install -e .
 ```
 
 Requires Python 3.11+ and an Anthropic API key.
 
 ```bash
 export ANTHROPIC_API_KEY=your-key-here
+```
+
+Run commands inside the venv:
+
+```bash
+source .venv/bin/activate
+saasy start ...
+
+# or without activating:
+uv run saasy start ...
 ```
 
 ---
