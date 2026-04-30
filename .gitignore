@@ -11,4 +11,3 @@ venv/
 .coverage
 htmlcov/
 *.so
-.venv/
