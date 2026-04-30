@@ -2,7 +2,7 @@
 
 An AI-powered SaaS red team assistant. Authenticate to a SaaS target, enumerate its attack surface through live API calls, and work with Claude to develop attack paths — conversationally, from an attacker's mindset.
 
-This is not a compliance scanner. saasy is for security engineers and pentesters who want to think offensively about a SaaS application they have access to.
+This is not a compliance scanner. SaaSy is for security engineers and pentesters who want to think offensively about a SaaS application they have access to.
 
 ---
 
@@ -11,72 +11,80 @@ This is not a compliance scanner. saasy is for security engineers and pentesters
 1. **Authenticate** — provide an API key or username/password for your target
 2. **Enumerate** — Claude proposes API calls to make; you approve each one before it fires
 3. **Analyze** — Claude reasons about what it found and suggests the next step
-4. **Discuss** — when something interesting surfaces, saasy enters a chat mode so you can explore the finding with Claude before continuing
+4. **Discuss** — when something interesting surfaces, SaaSy enters a chat mode so you can explore the finding with Claude before continuing
 
 The loop runs until you quit. Every request and response is captured in the session.
+
+---
+
+## Requirements
+
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/) package manager
+- Anthropic API key
 
 ---
 
 ## Installation
 
 ```bash
-# Install uv (if not already installed)
+# Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Clone and install
 git clone https://github.com/crybaby445/saasy
 cd saasy
 uv sync
-```
 
-Requires Python 3.11+ and an Anthropic API key.
-
-```bash
+# Set your Anthropic API key
 export ANTHROPIC_API_KEY=your-key-here
-```
-
-Run saasy directly via uv (no manual venv activation needed):
-
-```bash
-uv run saasy start ...
-```
-
-Or activate the venv once per shell session:
-
-```bash
-source .venv/bin/activate
-saasy start ...
 ```
 
 ---
 
 ## Usage
 
+Run commands with `uv run`, or activate the venv first (`source .venv/bin/activate`).
+
 ### Ona (reference connector)
 
 ```bash
-saasy start --target ona --url https://api.ona.io --api-key <your-PAT>
+uv run saasy start --target ona --url https://api.ona.io --api-key <your-PAT>
 ```
 
 ### Generic SaaS target with API key
 
 ```bash
-saasy start --target generic --url https://api.example.com --api-key <key>
+uv run saasy start --target generic --url https://api.example.com --api-key <key>
 ```
 
-### Generic SaaS target with OpenAPI spec + credentials
+### Generic SaaS target with OpenAPI spec + username/password
 
 ```bash
-saasy start --target generic \
+uv run saasy start --target generic \
   --url https://api.example.com \
   --spec openapi.yaml \
   --user admin \
   --pass secret
 ```
 
-### Use a specific Claude model
+### Choose a Claude model
 
 ```bash
-saasy start --target ona --url https://api.ona.io --api-key <PAT> --model claude-opus-4-7
+uv run saasy start --target ona --url https://api.ona.io --api-key <PAT> --model claude-opus-4-7
+```
+
+### All options
+
+```
+Options:
+  --target    [ona|generic]   SaaS connector to use (required)
+  --url       TEXT            Target base URL (required)
+  --api-key   TEXT            API key / PAT
+  --user      TEXT            Username for user+pass auth
+  --pass      TEXT            Password for user+pass auth
+  --spec      TEXT            Path to OpenAPI spec file (generic target only)
+  --model     TEXT            Claude model [default: claude-opus-4-7]
 ```
 
 ---
@@ -158,7 +166,7 @@ Continue? [y/quit] (y): y
 | Input | Action |
 |-------|--------|
 | `y` | Approve and execute the proposed API call |
-| `n` | Skip this proposal, ask AI for another |
+| `n` | Skip — ask AI for a different proposal |
 | `m` | Modify the endpoint or method before executing |
 | `quit` | End the session |
 
@@ -166,9 +174,9 @@ In chat mode, type `next` or `continue` to return to enumeration.
 
 ---
 
-## Writing checks for a new target
+## Adding a connector for a new target
 
-saasy ships with a connector for Ona and a generic connector for any SaaS with an OpenAPI spec. To add a new first-class connector, create a file in `saasy/connectors/`:
+SaaSy ships with a connector for Ona and a generic connector for any SaaS with an OpenAPI spec. To add a first-class connector, create a file in `saasy/connectors/`:
 
 ```python
 # saasy/connectors/myapp.py
@@ -189,12 +197,21 @@ class MyAppConnector(BaseConnector):
             Proposal(
                 method="GET",
                 endpoint=f"{self.base_url}/api/admin/settings",
-                rationale="Probe admin endpoint — may be accessible with low-priv token",
+                rationale="Probe admin endpoint — may be accessible with a low-priv token",
             ),
         ]
 ```
 
-Then wire it into `cli.py` alongside the existing connectors.
+Then add it to the `--target` choices in `saasy/cli.py`.
+
+---
+
+## Development
+
+```bash
+uv sync          # install all deps including dev
+uv run pytest    # run tests
+```
 
 ---
 
@@ -211,6 +228,7 @@ saasy/
 │   ├── connectors/       # OnaConnector, GenericConnector
 │   └── ai/               # ClaudeProvider (tool use + extended thinking)
 ├── tests/                # 24 tests
+├── uv.lock
 └── docs/
     ├── future_features.md
     └── superpowers/specs/
@@ -218,14 +236,6 @@ saasy/
 
 ---
 
-## Future
+## Roadmap
 
 See [`docs/future_features.md`](docs/future_features.md) for planned work, including a module to automatically convert SaaS API specs and CLI commands into MCP servers.
-
----
-
-## Requirements
-
-- Python 3.11+
-- `ANTHROPIC_API_KEY` environment variable
-- Network access to the target SaaS instance
