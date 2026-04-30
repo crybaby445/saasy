@@ -20,15 +20,31 @@ The loop runs until you quit. Every request and response is captured in the sess
 ## Installation
 
 ```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 git clone https://github.com/crybaby445/saasy
 cd saasy
-pip install -e .
+uv sync
 ```
 
 Requires Python 3.11+ and an Anthropic API key.
 
 ```bash
 export ANTHROPIC_API_KEY=your-key-here
+```
+
+Run saasy directly via uv (no manual venv activation needed):
+
+```bash
+uv run saasy start ...
+```
+
+Or activate the venv once per shell session:
+
+```bash
+source .venv/bin/activate
+saasy start ...
 ```
 
 ---
